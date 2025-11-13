@@ -242,20 +242,38 @@ const statusIndicator = document.getElementById('statusIndicator');
 const statusText = document.getElementById('statusText');
 
 function updateOnlineStatus() {
-    if (navigator.onLine) {
+    const isOnline = navigator.onLine;
+    console.log('Connection status:', isOnline ? 'Online' : 'Offline');
+
+    if (isOnline) {
         statusIndicator.textContent = '🟢';
         statusText.textContent = 'Online';
-        statusText.style.color = '#4CAF50';
+        onlineStatus.style.color = '#4CAF50';
     } else {
         statusIndicator.textContent = '🔴';
         statusText.textContent = 'Offline';
-        statusText.style.color = '#ff6b6b';
+        onlineStatus.style.color = '#ff6b6b';
     }
 }
 
-window.addEventListener('online', updateOnlineStatus);
-window.addEventListener('offline', updateOnlineStatus);
+// Add event listeners
+window.addEventListener('online', () => {
+    console.log('Online event fired');
+    updateOnlineStatus();
+});
+
+window.addEventListener('offline', () => {
+    console.log('Offline event fired');
+    updateOnlineStatus();
+});
+
+// Initial status check
 updateOnlineStatus();
+
+// Poll connection status every 5 seconds as a fallback
+setInterval(() => {
+    updateOnlineStatus();
+}, 5000);
 
 // Auto-save notepad every 30 seconds
 setInterval(() => {

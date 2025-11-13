@@ -1,7 +1,8 @@
-const CACHE_NAME = 'my-pwa-v1';
+const CACHE_NAME = 'my-pwa-v9';
 const urlsToCache = [
     '/',
     '/index.html',
+    '/test-update.html',
     '/styles.css',
     '/app.js',
     '/manifest.json'
@@ -43,7 +44,12 @@ self.addEventListener('fetch', (event) => {
                 })
                 .catch(() => {
                     // If network fails, fall back to cache
-                    return caches.match(event.request);
+                    return caches.match(event.request).then((cachedResponse) => {
+                        return cachedResponse || new Response('Network error and no cache available', {
+                            status: 503,
+                            statusText: 'Service Unavailable'
+                        });
+                    });
                 })
         );
     } else {
